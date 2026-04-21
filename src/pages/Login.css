@@ -1,6 +1,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  color: black;
 }
 
 /* ===== LAYOUT ===== */
@@ -68,7 +69,7 @@ body {
   margin: 0;
   font-weight: 600;
   animation: fadeIn 1.4s ease forwards;
-
+  color: black;
 }
 
 .left-center p {
@@ -155,7 +156,7 @@ body {
   text-align: left;
 }
 .login-card h4 {
-  
+  color: black;
   margin-bottom: 16px;
   
 }
@@ -204,6 +205,7 @@ input {
   margin-bottom: 10px;
   cursor: pointer;
   border-radius: 6px;
+  color: black;
 }
 
 .hospital-item:hover {
@@ -216,6 +218,7 @@ input {
   padding: 10px;
   margin-bottom: 10px;
   border-left: 4px solid #7a2d7d;
+  color: black;
 }
 
 /* FOOTER */
@@ -241,4 +244,133 @@ input {
   .login-left {
     display: none;
   }
+}
+/* ===== TRENDS CONTAINER ===== */
+.trends {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #111827, #111827);
+  border: 1px solid #1e293b;
+}
+
+/* HEADER */
+.trends-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.trends-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.trend-icon {
+  width: 40px;
+  height: 40px;
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+.trends-left h2 {
+  margin: 0;
+}
+
+.trends-left span {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* RIGHT SIDE */
+.trends-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.trend-input {
+  width: 140px;
+  height: 36px;
+  background: #0f172a;
+  border-radius: 10px;
+}
+
+.ai-badge {
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+/* CARDS GRID */
+.trends-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* CARD */
+.trend-card {
+  background: #111827;
+  border: 1px solid #1e293b;
+  padding: 18px;
+  border-radius: 16px;
+}
+
+.trend-card:hover {
+  border-color: #334155;
+  transform: translateY(-3px);
+}
+
+/* ICON */
+.trend-card .icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* TEXT */
+.trend-card p {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.trend-card h1 {
+  margin: 6px 0;
+}
+
+.trend-card .positive {
+  color: #22c55e;
+}
+
+.trend-card .link {
+  color: #3b82f6;
+}
+
+.trend-card .info {
+  color: #3b82f6;
+}
+
+/* FOOTER */
+.trends-footer {
+  margin-top: 20px;
+  padding: 14px;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  color: #9ca3af;
 }

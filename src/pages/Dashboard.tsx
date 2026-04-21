@@ -1,256 +1,227 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../services/auth';
-import './Dashboard.css';
+import React, { useState } from "react";
+import "./Dashboard.css";
+import { useAuth } from "../services/auth";
 
-interface DashboardStats {
-  totalAdmissions: number;
-  todayAdmissions: number;
-  activePatients: number;
-  discharged: number;
-}
-
-interface RecentAdmission {
-  id: number;
-  patientName: string;
-  department: string;
-  admissionDate: string;
-  status: 'Active' | 'Discharged' | 'Pending';
-  bedNo: string;
-}
-
-const Dashboard: React.FC = () => {
-  const { user, hospital, logout } = useAuth();
-  const [lastUpdated, setLastUpdated] = useState(new Date());
-  const [stats, setStats] = useState<DashboardStats>({
-    totalAdmissions: 1247,
-    todayAdmissions: 12,
-    activePatients: 89,
-    discharged: 1158,
-  });
-
-  const [recentAdmissions] = useState<RecentAdmission[]>([
-    {
-      id: 1,
-      patientName: 'Rajesh Kumar',
-      department: 'Cardiology',
-      admissionDate: '2024-04-21',
-      status: 'Active',
-      bedNo: 'A-101',
-    },
-    {
-      id: 2,
-      patientName: 'Priya Singh',
-      department: 'Orthopedics',
-      admissionDate: '2024-04-20',
-      status: 'Active',
-      bedNo: 'B-205',
-    },
-    {
-      id: 3,
-      patientName: 'Amit Patel',
-      department: 'Neurology',
-      admissionDate: '2024-04-19',
-      status: 'Active',
-      bedNo: 'C-310',
-    },
-    {
-      id: 4,
-      patientName: 'Anjali Verma',
-      department: 'Gynecology',
-      admissionDate: '2024-04-18',
-      status: 'Discharged',
-      bedNo: 'D-415',
-    },
-    {
-      id: 5,
-      patientName: 'Vikram Desai',
-      department: 'General Surgery',
-      admissionDate: '2024-04-17',
-      status: 'Active',
-      bedNo: 'E-520',
-    },
-  ]);
-
-  useEffect(() => {
-    // Simulate real-time data update
-    const interval = setInterval(() => {
-      setStats((prev) => ({
-        ...prev,
-        todayAdmissions: Math.floor(Math.random() * 20),
-        activePatients: Math.floor(Math.random() * 100) + 50,
-      }));
-      setLastUpdated(new Date());
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const getStatusColor = (status: string): string => {
-    switch (status) {
-      case 'Active':
-        return '#28a745';
-      case 'Discharged':
-        return '#6c757d';
-      case 'Pending':
-        return '#ffc107';
-      default:
-        return '#6c757d';
-    }
-  };
+const Dashboard = () => {
+  const { user, hospital } = useAuth();
+  const [open, setOpen] = useState(true);
 
   return (
-    <div className="dashboard-container">
-      {/* Header */}
-      <header className="dashboard-header">
-        <div className="header-content">
-          <h1>Grapes HMS</h1>
-          <p className="subtitle">IP Admission Dashboard</p>
-          <p className="meta-text">
-            {hospital?.hospital_name || user?.HospitalName || 'GRAPES IDMR'} | Last updated:{' '}
-            {lastUpdated.toLocaleTimeString()}
-          </p>
+    <div className="dash">
+
+      {/* ===== SIDEBAR ===== */}
+      <aside className="sidebar">
+        <div className="logo-box">
+          <img src="/grapeslogo.png" alt="logo" />
         </div>
-        <div className="user-section">
-          <div className="user-info">
-            <p className="user-name">{user?.Username || 'User'}</p>
-            <p className="user-role">{user?.Role || 'Administrator'}</p>
+
+        <div className="menu-toggle" onClick={() => setOpen(!open)}>
+          <p className="menu-title">Dashboard</p>
+          <span className={`arrow ${open ? "open" : ""}`}>⌄</span>
+        </div>
+
+        {open && (
+          <>
+            <p className="section-label">LIVE METRICS</p>
+
+            <div className="metric-card">
+              <span>Today's Appointments</span>
+              <h2>42</h2>
+              <small className="positive">+5</small>
+            </div>
+
+            <div className="metric-card">
+              <span>Pending Appointments</span>
+              <h2>28</h2>
+              <small className="negative">+3</small>
+            </div>
+
+            <div className="metric-card">
+              <span>Available Beds</span>
+              <h2>156</h2>
+              <small className="positive">+12</small>
+            </div>
+
+            <div className="metric-card">
+              <span>Insurance Pending</span>
+              <h2>34</h2>
+              <small className="positive">+8</small>
+            </div>
+          </>
+        )}
+      </aside>
+
+      {/* ===== MAIN ===== */}
+      <main className="main">
+
+        {/* HEADER */}
+        <div className="header">
+          <div>
+            <h1>Admission Discharge Desk</h1>
+            <p>{hospital?.hospital_name || "Hospital"} • Real-time insights</p>
           </div>
-          <button className="btn-logout" onClick={logout}>
-            Logout
-          </button>
+
+          <div className="header-right">
+            <div className="icon-btn">🔔</div>
+            <div className="icon-btn">⚙️</div>
+
+            <div className="profile">
+              <div className="avatar">
+                {user?.Username?.charAt(0) || "U"}
+              </div>
+              <div>
+                <p>{user?.Username || "User"}</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="dashboard-main">
-        <div className="container">
-          {/* Stats Section */}
-          <section className="stats-section">
-            <h2>Overview</h2>
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-icon total">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-                  </svg>
-                </div>
-                <div className="stat-content">
-                  <p className="stat-label">Total Admissions</p>
-                  <p className="stat-value">{stats.totalAdmissions}</p>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon today">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M8 4H16C17.1 4 18 4.9 18 6V20C18 21.1 17.1 22 16 22H8C6.9 22 6 21.1 6 20V6C6 4.9 6.9 4 8 4Z" />
-                  </svg>
-                </div>
-                <div className="stat-content">
-                  <p className="stat-label">Today's Admissions</p>
-                  <p className="stat-value">{stats.todayAdmissions}</p>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon active">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                </div>
-                <div className="stat-content">
-                  <p className="stat-label">Active Patients</p>
-                  <p className="stat-value">{stats.activePatients}</p>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon discharged">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M9 11l3 3L22 4" />
-                    <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="stat-content">
-                  <p className="stat-label">Discharged</p>
-                  <p className="stat-value">{stats.discharged}</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Recent Admissions Section */}
-          <section className="recent-admissions-section">
-            <div className="section-header">
-              <h2>Recent Admissions</h2>
-              <button className="btn-view-all">Export</button>
-            </div>
-
-            <div className="table-wrapper">
-              <table className="admissions-table">
-                <thead>
-                  <tr>
-                    <th>Patient Name</th>
-                    <th>Department</th>
-                    <th>Bed No.</th>
-                    <th>Admission Date</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentAdmissions.map((admission) => (
-                    <tr key={admission.id}>
-                      <td>
-                        <strong>{admission.patientName}</strong>
-                      </td>
-                      <td>{admission.department}</td>
-                      <td>{admission.bedNo}</td>
-                      <td>{admission.admissionDate}</td>
-                      <td>
-                        <span
-                          className="status-badge"
-                          style={{ backgroundColor: getStatusColor(admission.status) }}
-                        >
-                          {admission.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          {/* Quick Actions Section */}
-          <section className="quick-actions-section">
-            <h2>Quick Actions</h2>
-            <div className="actions-grid">
-              <button className="action-card">
-                <div className="action-icon">+</div>
-                <p>New Admission</p>
-              </button>
-              <button className="action-card">
-                <div className="action-icon">#</div>
-                <p>Patient Search</p>
-              </button>
-              <button className="action-card">
-                <div className="action-icon">%</div>
-                <p>Reports</p>
-              </button>
-              <button className="action-card">
-                <div className="action-icon">*</div>
-                <p>Settings</p>
-              </button>
-            </div>
-          </section>
+        {/* SEARCH */}
+        <div className="search-bar">
+          <input placeholder="Ask AI anything..." />
+          <button>✦ AI</button>
         </div>
+
+        {/* ===== TRENDS PANEL ===== */}
+        <div className="trends">
+
+          {/* HEADER */}
+          <div className="trends-header">
+            <div className="trends-left">
+              <div className="trend-icon">📈</div>
+              <div>
+                <h2>Trends</h2>
+                <span>AI-powered analytics & insights</span>
+              </div>
+            </div>
+
+            <div className="trends-right">
+              <div className="trend-input"></div>
+              <div className="ai-badge">✨ AI</div>
+            </div>
+          </div>
+
+          {/* CARDS */}
+          <div className="trends-cards">
+
+            <div className="trend-card">
+              <div className="icon">👥</div>
+              <p>Expected Patient Count</p>
+              <h1>284</h1>
+              <span className="sub">Today</span>
+              <span className="positive">+12%</span>
+            </div>
+
+            <div className="trend-card">
+              <div className="icon">⏱</div>
+              <p>Peak Time</p>
+              <h1>2:30 PM</h1>
+              <span className="sub">Highest traffic</span>
+              <span className="link">Next: 6:45 PM</span>
+            </div>
+
+            <div className="trend-card">
+              <div className="icon">💓</div>
+              <p>Patient Admissions</p>
+              <h1>156</h1>
+              <span className="sub">This Week</span>
+              <span className="positive">+8%</span>
+            </div>
+
+            <div className="trend-card">
+              <div className="icon">🛏</div>
+              <p>Total Beds</p>
+              <h1>450</h1>
+              <span className="sub">156 available</span>
+              <span className="info">65% occupied</span>
+            </div>
+
+          </div>
+
+          {/* FOOTER */}
+          <div className="trends-footer">
+            <span>Weekly Overview</span>
+            <span>⌄</span>
+          </div>
+
+        </div>
+
+        {/* ===== BOTTOM ===== */}
+        <div className="bottom">
+
+          <div className="bed-box">
+            <h2>Bed Occupancy</h2>
+            <span className="sub">Real-time bed status</span>
+
+            <div className="bed-grid">
+              {Array.from({ length: 24 }).map((_, i) => {
+                const status = i % 3 === 0 ? "AVL" : i % 3 === 1 ? "OCC" : "MNT";
+
+                return (
+                  <div className="bed" key={i}>
+                    <span>B-{i + 101}</span>
+                    <div className={`status ${status.toLowerCase()}`}>
+                      {status}
+                    </div>
+                    <small>
+                      {status === "OCC"
+                        ? "John"
+                        : status === "AVL"
+                        ? "Free"
+                        : "Maintenance"}
+                    </small>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="queue">
+            <h2>Patient Queue</h2>
+            <span className="sub">6 patients waiting</span>
+
+            {[
+  { name: "Robert Martinez", priority: "high", time: "15 min" },
+  { name: "Emily Chen", priority: "medium", time: "28 min" },
+  { name: "David Wilson", priority: "high", time: "8 min" },
+  { name: "Aisha Khan", priority: "medium", time: "22 min" },
+
+].map((p, i) => (
+              <div className="patient-card" key={i}>
+
+  {/* TOP */}
+  <div className="patient-top">
+    <div className="patient-name">
+      {p.name}
+      <span className={`tag ${p.priority}`}>{p.priority}</span>
+    </div>
+
+    <div className="patient-time">⏱ {p.time}</div>
+  </div>
+
+  {/* META */}
+  <div className="patient-meta">
+    <span>P-{1024 + i}</span>
+    <span>•</span>
+    <span>Age {40 + i}</span>
+  </div>
+
+  {/* DIVIDER */}
+  <div className="divider"></div>
+
+  {/* BOTTOM */}
+  <div className="patient-bottom">
+    <span>Emergency</span>
+    <span>Chest pain</span>
+  </div>
+
+</div>
+            ))}
+          </div>
+
+        </div>
+
       </main>
-
-      {/* Footer */}
-      <footer className="dashboard-footer">
-        <p>&copy; 2024 Grapes Innovative Solutions. All rights reserved.</p>
-      </footer>
     </div>
   );
 };
