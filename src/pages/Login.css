@@ -1,214 +1,232 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* ===== LAYOUT ===== */
 .login-container {
+  height: 100vh;
+}
+
+.login-layout {
   display: flex;
-  align-items: center;
+  height: 100%;
+}
+
+/* ===== LEFT SIDE ===== */
+.login-left {
+  flex: 1;
+  background: #f5f6fa;
+  position: relative;
+
+  display: flex;
   justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  align-items: center;
 }
 
-.login-card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 450px;
-  padding: 40px;
-  animation: slideUp 0.5s ease-out;
+/* TOP LOGO */
+.top-logo {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 175px;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* HEARTBEAT BACKGROUND */
+.heartbeat-bg {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 320px;
+  opacity: 0.06;
+
+  pointer-events: none;
+  z-index: 0;
 }
 
-.login-header {
+/* CENTER CONTENT */
+.left-center {
+  position: relative;
   text-align: center;
-  margin-bottom: 30px;
+  z-index: 2;
+
+  margin-bottom: 25px;
+  animation: contentEntry 1.2s ease-out forwards;
 }
 
-.login-header h1 {
-  font-size: 32px;
-  color: #333;
-  margin-bottom: 8px;
+/* HOSPITAL LOGO */
+.hospital-logo-large {
+  width: 300px;
+  margin-bottom: -55px;
 }
 
-.login-header p {
-  font-size: 14px;
-  color: #999;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
+/* TEXT */
+.left-center h2 {
+  font-size: 28px;
+  margin: 0;
   font-weight: 600;
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 8px;
+  animation: fadeIn 1.4s ease forwards;
+
 }
 
-.form-group input {
+.left-center p {
+  font-size: 16px;
+  margin-top: -2px;
+  color: #555;
+  animation: fadeIn 1.6s ease forwards;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes contentEntry {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ===== RIGHT SIDE ===== */
+.login-right {
+  position: relative;
+  flex: 1;
+  background: linear-gradient(135deg, #7a2d7d, black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* ===== RIGHT SIDE ===== */
+.login-right {
+  position: relative;
+  flex: 1;
+  background: linear-gradient(135deg, #7a2d7d, black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* 🔥 important */
+}
+
+/* 🔥 WIREFRAME GRID OVERLAY */
+.login-right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+
+  background-size: 40px 40px;
+
+  opacity: 0.4; /* 🔥 transparency control */
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* CARD */
+.login-card {
+  width: 380px;
+  padding: 40px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  text-align: center;
+}
+.login-card {
+  position: relative;
+  z-index: 2; /* above grid */
+}
+
+/* INPUT */
+input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px;
+  margin-bottom: 18px;
+  border-radius: 8px;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: all 0.3s ease;
 }
 
-.form-group input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.form-group input:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
-}
-
-.btn {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 12px;
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
+/* BUTTON */
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #7a2d7d, black);
   color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  cursor: pointer;
 }
 
 .btn-secondary {
-  background: #f0f0f0;
-  color: #333;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #eee;
 }
 
-.btn-secondary:hover:not(:disabled) {
-  background: #e0e0e0;
-}
-
+/* ALERT */
 .alert {
-  padding: 12px 16px;
+  background: #ffe5e5;
+  color: red;
+  padding: 10px;
+  margin-bottom: 15px;
   border-radius: 6px;
-  margin-bottom: 20px;
-  font-size: 14px;
 }
 
-.alert-error {
-  background: #fee;
-  color: #c33;
-  border: 1px solid #fcc;
-}
-
-.step-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.hospital-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
+/* LIST */
 .hospital-item {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  background: white;
+  padding: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: left;
+  border-radius: 6px;
 }
 
 .hospital-item:hover {
-  border-color: #667eea;
-  background: #f9f9f9;
-}
-
-.hospital-item.selected {
-  border-color: #667eea;
   background: #f0f0ff;
 }
 
-.hospital-name {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 4px;
+/* INFO */
+.info-box {
+  background: #f5f5f5;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-left: 4px solid #7a2d7d;
 }
 
-.hospital-id {
-  font-size: 12px;
-  color: #999;
-}
-
-.hospital-info {
-  background: #f9f9f9;
-  padding: 16px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  border-left: 4px solid #667eea;
-}
-
-.hospital-info p {
-  margin: 8px 0;
-  font-size: 14px;
-  color: #333;
-}
-
+/* FOOTER */
 .login-footer {
-  text-align: center;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+  right: 30px;
+
+  display: flex;
+  justify-content: space-between;
+
   font-size: 12px;
-  color: #999;
+  color: rgba(255,255,255,0.6);
 }
 
-.signup-link {
-  display: block;
-  margin-top: 12px;
-  background: none;
-  border: none;
-  color: #667eea;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-  transition: all 0.3s ease;
-}
+/* MOBILE */
+@media (max-width: 768px) {
+  .login-layout {
+    flex-direction: column;
+  }
 
-.signup-link:hover {
-  color: #764ba2;
-  text-decoration: underline;
+  .login-left {
+    display: none;
+  }
 }
