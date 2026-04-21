@@ -140,7 +140,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
             {step === 'hospital' && (
               <>
-                <h4>Select Hospital</h4>
+                <h4>Choose Your Hospital</h4>
                 {hospitals.map((h) => (
                   <div
                     key={h.hospital_id}
