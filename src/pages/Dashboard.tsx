@@ -19,7 +19,8 @@ interface RecentAdmission {
 }
 
 const Dashboard: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, hospital, logout } = useAuth();
+  const [lastUpdated, setLastUpdated] = useState(new Date());
   const [stats, setStats] = useState<DashboardStats>({
     totalAdmissions: 1247,
     todayAdmissions: 12,
@@ -78,6 +79,7 @@ const Dashboard: React.FC = () => {
         todayAdmissions: Math.floor(Math.random() * 20),
         activePatients: Math.floor(Math.random() * 100) + 50,
       }));
+      setLastUpdated(new Date());
     }, 5000);
 
     return () => clearInterval(interval);
@@ -103,6 +105,10 @@ const Dashboard: React.FC = () => {
         <div className="header-content">
           <h1>Grapes HMS</h1>
           <p className="subtitle">IP Admission Dashboard</p>
+          <p className="meta-text">
+            {hospital?.hospital_name || user?.HospitalName || 'GRAPES IDMR'} | Last updated:{' '}
+            {lastUpdated.toLocaleTimeString()}
+          </p>
         </div>
         <div className="user-section">
           <div className="user-info">
@@ -178,7 +184,7 @@ const Dashboard: React.FC = () => {
           <section className="recent-admissions-section">
             <div className="section-header">
               <h2>Recent Admissions</h2>
-              <button className="btn-view-all">View All</button>
+              <button className="btn-view-all">Export</button>
             </div>
 
             <div className="table-wrapper">
@@ -221,19 +227,19 @@ const Dashboard: React.FC = () => {
             <h2>Quick Actions</h2>
             <div className="actions-grid">
               <button className="action-card">
-                <div className="action-icon">📋</div>
+                <div className="action-icon">+</div>
                 <p>New Admission</p>
               </button>
               <button className="action-card">
-                <div className="action-icon">👤</div>
+                <div className="action-icon">#</div>
                 <p>Patient Search</p>
               </button>
               <button className="action-card">
-                <div className="action-icon">📊</div>
+                <div className="action-icon">%</div>
                 <p>Reports</p>
               </button>
               <button className="action-card">
-                <div className="action-icon">⚙️</div>
+                <div className="action-icon">*</div>
                 <p>Settings</p>
               </button>
             </div>

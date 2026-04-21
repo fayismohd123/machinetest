@@ -27,6 +27,12 @@
   margin: 4px 0 0 0;
 }
 
+.meta-text {
+  font-size: 12px;
+  opacity: 0.85;
+  margin: 8px 0 0 0;
+}
+
 .user-section {
   display: flex;
   align-items: center;
@@ -280,7 +286,16 @@
 }
 
 .action-icon {
-  font-size: 32px;
+  font-size: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef0ff;
+  color: #667eea;
+  font-weight: 700;
 }
 
 /* Footer */

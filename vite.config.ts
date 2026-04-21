@@ -6,6 +6,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    open: true
+    open: true,
+    proxy: {
+      '/api': {
+        target: 'http://machinetest.grapesonline.net',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   }
 })

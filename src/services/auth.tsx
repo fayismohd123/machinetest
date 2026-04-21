@@ -3,6 +3,21 @@ import { AuthContextType, Hospital, UserInfo, LoginRequest } from '../types';
 import { preloginAuthentication, userLogin, clearAuthData } from './api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AUTH_TOKEN_KEY = 'authToken';
+const USER_KEY = 'user';
+const HOSPITAL_KEY = 'hospital';
+
+const parseStoredJSON = <T,>(rawValue: string | null): T | null => {
+  if (!rawValue) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(rawValue) as T;
+  } catch {
+    return null;
+  }
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -11,18 +26,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [hospital, setHospital] = useState<Hospital | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('authToken');
-    const storedUser = localStorage.getItem('user');
-    const storedHospital = localStorage.getItem('hospital');
+    const storedToken = localStorage.getItem(AUTH_TOKEN_KEY);
+    const storedUser = parseStoredJSON<UserInfo>(localStorage.getItem(USER_KEY));
+    const storedHospital = parseStoredJSON<Hospital>(localStorage.getItem(HOSPITAL_KEY));
 
     if (storedToken && storedUser) {
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      setUser(storedUser);
+      setHospital(storedHospital);
       setIsAuthenticated(true);
+      return;
+    }
 
-      if (storedHospital) {
-        setHospital(JSON.parse(storedHospital));
-      }
+    if (storedToken || localStorage.getItem(USER_KEY) || localStorage.getItem(HOSPITAL_KEY)) {
+      clearAuthData();
     }
   }, []);
 
@@ -47,6 +64,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const response = await userLogin(loginData);
 
       if (response.Token) {
+        const selectedHospital: Hospital = {
+          hospital_id: response.HospitalID,
+          hospital_name: response.HospitalName,
+        };
+
         const userData: UserInfo = {
           Username: response.Username,
           PhoneNumber: response.Phone,
@@ -56,16 +78,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         setToken(response.Token);
         setUser(userData);
+        setHospital(selectedHospital);
         setIsAuthenticated(true);
-        localStorage.setItem('authToken', response.Token);
-        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem(AUTH_TOKEN_KEY, response.Token);
+        localStorage.setItem(USER_KEY, JSON.stringify(userData));
+        localStorage.setItem(HOSPITAL_KEY, JSON.stringify(selectedHospital));
       } else {
         throw new Error('Login failed');
       }
     } catch (error) {
+      clearAuthData();
       setIsAuthenticated(false);
       setToken(null);
       setUser(null);
+      setHospital(null);
       throw error;
     }
   };

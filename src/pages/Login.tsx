@@ -5,10 +5,9 @@ import './Login.css';
 
 interface LoginProps {
   onLoginSuccess: () => void;
-  onCreateAccount?: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onLoginSuccess, onCreateAccount }) => {
+const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const { preAuth, login } = useAuth();
 
   // Form state
@@ -26,15 +25,16 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, onCreateAccount }) => {
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    const normalizedPhone = phoneNumber.replace(/\D/g, '');
 
-    if (!phoneNumber || phoneNumber.length < 10) {
-      setError('Please enter a valid phone number');
+    if (!normalizedPhone || normalizedPhone.length < 10) {
+      setError('Please enter a valid 10-digit mobile number');
       return;
     }
 
     setLoading(true);
     try {
-      const hospitalsList = await preAuth(phoneNumber);
+      const hospitalsList = await preAuth(normalizedPhone);
 
       if (hospitalsList.length === 0) {
         setError('No hospitals found for this phone number');
@@ -43,18 +43,9 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, onCreateAccount }) => {
       }
 
       setHospitals(hospitalsList);
-
-      // Auto-select GRAPES IDMR if available
-      const grapesHospital = hospitalsList.find(
-        (h) => h.hospital_name.includes('GRAPES') || h.hospital_name.includes('IDMR')
-      );
-
-      if (grapesHospital) {
-        setSelectedHospital(grapesHospital);
-        setStep('password');
-      } else {
-        setStep('hospital');
-      }
+      setSelectedHospital(null);
+      setPhoneNumber(normalizedPhone);
+      setStep('hospital');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch hospitals');
     } finally {
@@ -65,6 +56,8 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, onCreateAccount }) => {
   // Handle hospital selection
   const handleHospitalSelect = (hospital: Hospital) => {
     setSelectedHospital(hospital);
+    setPassword('');
+    setError('');
     setStep('password');
   };
 
@@ -72,8 +65,9 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, onCreateAccount }) => {
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    const trimmedPassword = password.trim();
 
-    if (!password) {
+    if (!trimmedPassword) {
       setError('Please enter your password');
       return;
     }
@@ -83,9 +77,19 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, onCreateAccount }) => {
       return;
     }
 
+    const normalizedPhone = phoneNumber.replace(/\D/g, '');
+    if (!normalizedPhone || normalizedPhone.length < 10) {
+      setError('Invalid mobile number. Please go back and enter again.');
+      return;
+    }
+
+    if (loading) {
+      return;
+    }
+
     setLoading(true);
     try {
-      await login(phoneNumber, selectedHospital.hospital_id, password);
+      await login(normalizedPhone, selectedHospital.hospital_id, trimmedPassword);
       onLoginSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
@@ -98,12 +102,11 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, onCreateAccount }) => {
     if (step === 'hospital') {
       setStep('phone');
       setHospitals([]);
+      setSelectedHospital(null);
+      setPassword('');
     } else if (step === 'password') {
-      if (hospitals.length > 1) {
-        setStep('hospital');
-      } else {
-        setStep('phone');
-      }
+      setStep('hospital');
+      setPassword('');
     }
   };
 
@@ -206,15 +209,6 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess, onCreateAccount }) => {
 
         <div className="login-footer">
           <p>© 2024 Grapes Innovative Solutions</p>
-          {onCreateAccount && (
-            <button
-              type="button"
-              onClick={onCreateAccount}
-              className="signup-link"
-            >
-              Don't have an account? Create one
-            </button>
-          )}
         </div>
       </div>
     </div>
