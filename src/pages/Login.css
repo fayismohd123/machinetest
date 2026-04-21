@@ -147,6 +147,20 @@ body {
   z-index: 2; /* above grid */
 }
 
+.login-card h1 {
+  font-size: 20px; 
+  margin-bottom: 20px;
+  margin-top: -20px;
+  color: #7a2d7d;
+  text-align: left;
+}
+.login-card h4 {
+  
+  margin-bottom: 16px;
+
+  color: #7a2d7d;
+  
+}
 /* INPUT */
 input {
   width: 100%;
