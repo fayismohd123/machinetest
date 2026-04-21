@@ -89,7 +89,11 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
     setLoading(true);
     try {
-      await login(normalizedPhone, selectedHospital.hospital_id, trimmedPassword);
+      await login(
+        normalizedPhone,
+        (selectedHospital.hospital_id),
+        trimmedPassword
+      );
       onLoginSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
